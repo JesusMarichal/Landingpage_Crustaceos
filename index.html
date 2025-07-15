@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Reconocimiento de Petrolisthes</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --primary-color: #0f3460;      /* Azul marino profundo */
+            --secondary-color: #16537e;   /* Azul océano */
+            --accent-color: #1e88e5;      /* Azul cielo marino */
+            --silver-gradient: linear-gradient(120deg, #b3d9ff 0%, #4a90a4 100%); /* Azul plateado */
+            --dark-bg: #0a1929;           /* Azul marino oscuro */
+            --light-text: #f0f8ff;        /* Blanco azulado */
+            --gray-text: #90caf9;         /* Azul claro */
+            --coral-accent: #ff7043;      /* Coral para acentos */
+            --sea-green: #26a69a;         /* Verde mar */
+            --deep-blue: #1a237e;         /* Azul profundo */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--primary-color) 100%);
+            color: var(--gray-text);
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 12px 0 rgba(15, 52, 96, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: var(--gray-text);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--accent-color);
+            box-shadow: 0 0 8px var(--accent-color), 0 0 2px var(--coral-accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        section {
+            padding: 6rem 2rem 2rem;
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(120deg, rgba(10,25,41,0.95) 0%, rgba(22,83,126,0.75) 100%), 
+                        url('https://images.unsplash.com/photo-1559827260-dc66d52bef19') center/cover;
+            display: grid;
+            place-items: center;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--light-text);
+            text-shadow: 0 2px 16px var(--dark-bg), 0 1px 0 var(--accent-color);
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: var(--silver-gradient);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--secondary-color);
+            box-shadow: 0 4px 24px 0 rgba(30,136,229,0.15);
+            color: var(--light-text);
+        }
+        .card * {
+            color: var(--light-text) !important;
+        }
+        
+        .card.collaborator {
+            background: linear-gradient(135deg, var(--sea-green) 0%, var(--accent-color) 100%);
+            border: 2px solid var(--coral-accent);
+            box-shadow: 0 6px 32px 0 rgba(38,166,154,0.3);
+        }
+        
+        .card.collaborator h3 {
+            color: var(--light-text) !important;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card.collaborator p {
+            color: var(--light-text) !important;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 0.8rem;
+        }
+        
+        .card.collaborator:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 8px 40px 0 rgba(38,166,154,0.4);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 20px 0 rgba(15, 52, 96, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border: 2px solid rgba(144, 202, 249, 0.3);
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .method-card {
+            background: linear-gradient(120deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            color: var(--light-text);
+            font-weight: 500;
+            box-shadow: 0 2px 12px 0 var(--dark-bg);
+        }
+
+        .university-info {
+            background: linear-gradient(90deg, var(--secondary-color) 0%, var(--silver-gradient));
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            color: var(--dark-bg);
+            font-weight: 600;
+            box-shadow: 0 2px 12px 0 var(--dark-bg);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        .animate-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            .methodology-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="#inicio"><i class="fas fa-home"></i> Inicio</a>
+            <a href="#creadores"><i class="fas fa-users"></i> Creadores</a>
+            <a href="#metodologia"><i class="fas fa-flask"></i> Metodología</a>
+            <a href="#agradecimientos"><i class="fas fa-hands-helping"></i> Agradecimientos</a>
+        </div>
+    </nav>
+
+    <section id="inicio" class="hero">
+        <div class="hero-content">
+            <h1 style="color: #1e88e5">¡Bienvenido al Clasificador de Especies de Crustáceos!</h1>
+            <div class="university-info">
+                <h3 style="color: #42a5f5">Proyecto desarrollado en:</h3>
+                <p style="color: #90caf9">Universidad de Oriente - Núcleo Nueva Esparta</p>
+                <p style="color: #90caf9">Escuela de Ingeniería y Ciencias Aplicadas</p>
+                <p style="color: #90caf9">Departamento de Informática - Sistemas Expertos</p>
+            </div>
+            
+            <div style="background: rgba(0,0,0,0.8); padding: 3rem; border-radius: 20px; margin: 2rem 0; max-width: 1000px; margin-left: auto; margin-right: auto; box-shadow: 0 8px 32px rgba(30, 136, 229, 0.3);">
+                <h2 style="color: #1e88e5; margin-bottom: 2rem; font-size: 2.5rem; text-align: center;">🌊 Descubre el fascinante mundo de los crustáceos con nuestro innovador sistema experto!</h2>
+                
+                <p style="font-size: 1.4rem; line-height: 1.8; margin-bottom: 2rem; color: #90caf9; text-align: center;">¿Te has preguntado alguna vez qué especie de crustáceo has encontrado en tu última aventura? ¡Ahora es más fácil que nunca identificarla! Nuestro clasificador utiliza tecnología de vanguardia para ofrecerte una experiencia interactiva y educativa.</p>
+                
+                <!-- Cómo Funciona -->
+                <div style="background: rgba(30, 136, 229, 0.15); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid #1e88e5;">
+                    <h3 style="color: #42a5f5; margin-bottom: 2rem; font-size: 2rem; text-align: center;">🦀 ¿Cómo Funciona?</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                        <div style="background: linear-gradient(135deg, #1e88e5, #42a5f5); padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 20px rgba(30, 136, 229, 0.3);">
+                            <h4 style="color: white; margin-bottom: 1rem; font-size: 1.3rem;">1. Inicio de la Aplicación</h4>
+                            <p style="color: #e3f2fd; font-size: 1.1rem; line-height: 1.6;">Simplemente ejecuta el archivo interfaz.py y prepárate para sumergirte en el mundo de los crustáceos.</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #26a69a, #4db6ac); padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 20px rgba(38, 166, 154, 0.3);">
+                            <h4 style="color: white; margin-bottom: 1rem; font-size: 1.3rem;">2. Menú Principal</h4>
+                            <p style="color: #e0f2f1; font-size: 1.1rem; line-height: 1.6;">Al abrir la aplicación, serás recibido por un menú amigable con opciones de Ascendente, Acerca De y Salir.</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #ff7043, #ff8a65); padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 20px rgba(255, 112, 67, 0.3);">
+                            <h4 style="color: white; margin-bottom: 1rem; font-size: 1.3rem;">3. Cuestionario Interactivo</h4>
+                            <p style="color: #fbe9e7; font-size: 1.1rem; line-height: 1.6;">Al seleccionar "Ascendente", participa en un cuestionario de 23 preguntas de tipo Sí/No.</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #9c27b0, #ba68c8); padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 20px rgba(156, 39, 176, 0.3);">
+                            <h4 style="color: white; margin-bottom: 1rem; font-size: 1.3rem;">4. Recopilación de Datos</h4>
+                            <p style="color: #f3e5f5; font-size: 1.1rem; line-height: 1.6;">Tus respuestas se almacenan en un vector binario, donde 1 representa "Sí" y 0 "No".</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #f57c00, #ffb74d); padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 20px rgba(245, 124, 0, 0.3);">
+                            <h4 style="color: white; margin-bottom: 1rem; font-size: 1.3rem;">5. Predicción de Especies</h4>
+                            <p style="color: #fff3e0; font-size: 1.1rem; line-height: 1.6;">Una vez completo el cuestionario, el botón "Predecir" se activará para procesar tus respuestas.</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #388e3c, #66bb6a); padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 20px rgba(56, 142, 60, 0.3);">
+                            <h4 style="color: white; margin-bottom: 1rem; font-size: 1.3rem;">6. Resultado Final</h4>
+                            <p style="color: #e8f5e8; font-size: 1.1rem; line-height: 1.6;">¡Y voilà! La especie predicha se mostrará claramente en la interfaz.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Características Principales -->
+                <div style="background: rgba(38, 166, 154, 0.15); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid #26a69a;">
+                    <h3 style="color: #4db6ac; margin-bottom: 2rem; font-size: 2rem; text-align: center;">✨ Características Principales</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                        <div style="background: rgba(30, 136, 229, 0.2); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #1e88e5;">
+                            <h4 style="color: #42a5f5; margin-bottom: 1rem;">🖥️ Interfaz Gráfica Amigable</h4>
+                            <p style="color: #e3f2fd; font-size: 1rem; line-height: 1.5;">Diseñada con Tkinter, nuestra aplicación es intuitiva y fácil de usar.</p>
+                        </div>
+                        
+                        <div style="background: rgba(38, 166, 154, 0.2); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #26a69a;">
+                            <h4 style="color: #4db6ac; margin-bottom: 1rem;">❓ Cuestionario Dinámico</h4>
+                            <p style="color: #e0f2f1; font-size: 1rem; line-height: 1.5;">Preguntas visualmente centradas que te guían paso a paso en el proceso de identificación.</p>
+                        </div>
+                        
+                        <div style="background: rgba(255, 112, 67, 0.2); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ff7043;">
+                            <h4 style="color: #ff8a65; margin-bottom: 1rem;">🧠 Motor de Predicción Robusto</h4>
+                            <p style="color: #fbe9e7; font-size: 1rem; line-height: 1.5;">Utilizamos una red neuronal profunda (modelo Keras) para garantizar una clasificación precisa.</p>
+                        </div>
+                        
+                        <div style="background: rgba(156, 39, 176, 0.2); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #9c27b0;">
+                            <h4 style="color: #ba68c8; margin-bottom: 1rem;">⚡ Carga Automática de Recursos</h4>
+                            <p style="color: #f3e5f5; font-size: 1rem; line-height: 1.5;">Al iniciar la aplicación, el modelo entrenado y las etiquetas de las clases se cargan automáticamente, ¡sin complicaciones!</p>
+                        </div>
+                        
+                        <div style="background: rgba(245, 124, 0, 0.2); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #f57c00;">
+                            <h4 style="color: #ffb74d; margin-bottom: 1rem;">🎮 Control de Navegación</h4>
+                            <p style="color: #fff3e0; font-size: 1rem; line-height: 1.5;">Regresa al menú principal en cualquier momento y gestiona el flujo de la aplicación sin problemas.</p>
+                        </div>
+                        
+                        <div style="background: rgba(56, 142, 60, 0.2); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #388e3c;">
+                            <h4 style="color: #66bb6a; margin-bottom: 1rem;">🎯 Predicción Manual</h4>
+                            <p style="color: #e8f5e8; font-size: 1rem; line-height: 1.5;">Tienes el control total sobre cuándo ejecutar el proceso de clasificación.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Llamada a la Acción -->
+                <div style="background: linear-gradient(135deg, #1e88e5, #26a69a); padding: 3rem; border-radius: 20px; margin: 3rem 0; text-align: center; box-shadow: 0 8px 32px rgba(30, 136, 229, 0.4);">
+                    <h3 style="color: white; margin-bottom: 1.5rem; font-size: 2.2rem;">🌟 ¡Únete a la Aventura!</h3>
+                    <p style="color: #e3f2fd; font-size: 1.3rem; line-height: 1.8; margin-bottom: 2rem;">No importa si eres un entusiasta de la biología marina o simplemente tienes curiosidad por la vida marina, nuestro clasificador de especies de crustáceos está aquí para ayudarte. ¡Descubre, aprende y comparte tus hallazgos con nosotros!</p>
+                    <div style="background: rgba(255, 255, 255, 0.2); padding: 1.5rem; border-radius: 15px; margin-top: 2rem;">
+                        <h4 style="color: #fff; font-size: 1.5rem; margin-bottom: 1rem;">🦀🌊 ¡Descarga la aplicación y comienza tu viaje de identificación de crustáceos hoy mismo!</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="creadores">
+        <h2>Creadores del Sistema</h2>
+        <div class="card-container">
+            <div class="card">
+                <img src="images/ProgramaGerman.png" alt="Estudiante Investigador">
+                <h3><i class="fas fa-user-graduate"></i> Germán Gonzalez</h3>
+                <p>Estudiante de Ingeniería en Sistemas</p>
+                <p>Investigador principal del proyecto</p>
+                <p>Especialista en desarrollo de sistemas expertos</p>
+            </div>
+            <div class="card">
+                <img src="#" alt="Estudiante Desarrollador">
+                <h3><i class="fas fa-code"></i> Jesús Marichal</h3>
+                <p>Estudiante de Ingeniería en Sistemas</p>
+                <p>Desarrollador Full-Stack</p>
+                <p>Especialista en bases de datos y algoritmos</p>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=250&fit=crop&crop=face" alt="Gabriel Rosas">
+                <h3><i class="fas fa-laptop-code"></i> Gabriel Rosas</h3>
+                <p>Estudiante de Ingeniería en Sistemas</p>
+                <p>Analista de Sistemas</p>
+                <p>Especialista en interfaz de usuario y testing</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="metodologia">
+        <h2 style="color: #1e88e5"  class="animate-in" >Metodología IDEAL</h2>
+        <div class="methodology-grid">
+            <div class="method-card">
+                <h3><i class="fas fa-search"></i> Identificación</h3>
+                <p>Reconocimiento de patrones en imágenes de crustáceos</p>
+            </div>
+            <div class="method-card">
+                <h3><i class="fas fa-project-diagram"></i> Diseño</h3>
+                <p>Arquitectura de red neuronal con 5 capas convolucionales</p>
+            </div>
+            <div class="method-card">
+                <h3><i class="fas fa-cogs"></i> Ejecución</h3>
+                <p>Implementación en TensorFlow con 92% de precisión</p>
+            </div>
+            <div class="method-card">
+                <h3><i class="fas fa-chart-line"></i> Analisis</h3>
+                <p>Validación con claves taxonómicas oficiales</p>
+            </div>
+            <div class="method-card">
+                <h3><i class="fas fa-book"></i> Lectura</h3>
+                <p>Documentación de resultados para la comunidad científica</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="agradecimientos">
+        <h2>Agradecimientos</h2>
+<div class="card-container">
+            <div class="card collaborator">
+                <img src="images/colaborador-experto.jpeg" alt="Colaborador y Experto">
+                <h3><i class="fas fa-microscope"></i> Colaborador y Experto en Carcinología</h3>
+                <p><strong>Profesor de la Escuela de Ciencias Aplicadas al Mar (ECAM)</strong></p>
+                <p>Universidad de Oriente Núcleo-Nueva Esparta</p>
+                <p>Contribuyó con las especificaciones técnicas y científicas necesarias para el correcto funcionamiento del sistema de identificación de especies de Petrolisthes.</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/300x250/26a69a/ffffff?text=Colaborador" alt="Colaborador 2">
+                <h3><i class="fas fa-user-nurse"></i>Profesor Jose Gregorio Murillo</h3>
+                <br>    
+                <p><strong>Especialista en Informática y Biología Marina</strong></p>
+                <br>
+                <p>Universidad de Oriente Núcleo-Nueva Esparta</p>
+                <br>
+                <p>Contribuyó con la guia del proyecto, proporciono al experto para contribuir con diseño del sistema
+                    y la documentación del sistema.</p>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        footer {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: var(--light-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 -2px 12px 0 var(--dark-bg);
+        }
+
+        footer p {
+            text-align: center;
+        }
+    </style>
+
+    
+
+    <footer>
+        <p>
+            Este recurso es gratuito y se puede compartir libremente. &copy; 
+            <script>document.write(new Date().getFullYear());</script>
+            <br>
+            Desarrollado en Venezuela
+        </p>
+    </footer>
+
+
+    <script>
+        // Animaciones al scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach((section) => {
+            observer.observe(section);
+        });
+
+        // Smooth scroll para navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Efecto parallax en hero
+        window.addEventListener('scroll', () => {
+            const hero = document.querySelector('.hero');
+            const scrollPos = window.scrollY;
+            hero.style.backgroundPosition = `center ${scrollPos * 0.5}px`;
+        });
+    </script>
+</body>
+</html>
