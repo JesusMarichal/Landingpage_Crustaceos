@@ -15,213 +15,36 @@
     <title>Sistema de Reconocimiento de Petrolisthes</title>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        :root {
-            --primary-color: #0f3460;      /* Azul marino profundo */
-            --secondary-color: #16537e;   /* Azul océano */
-            --accent-color: #1e88e5;      /* Azul cielo marino */
-            --silver-gradient: linear-gradient(120deg, #b3d9ff 0%, #4a90a4 100%); /* Azul plateado */
-            --dark-bg: #0a1929;           /* Azul marino oscuro */
-            --light-text: #f0f8ff;        /* Blanco azulado */
-            --gray-text: #90caf9;         /* Azul claro */
-            --coral-accent: #ff7043;      /* Coral para acentos */
-            --sea-green: #26a69a;         /* Verde mar */
-            --deep-blue: #1a237e;         /* Azul profundo */
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--primary-color) 100%);
-            color: var(--gray-text);
-        }
-
-        .navbar {
-            position: fixed;
-            width: 100%;
-            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            padding: 1rem 2rem;
-            z-index: 1000;
-            box-shadow: 0 2px 12px 0 rgba(15, 52, 96, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-        }
-
-        .nav-links a {
-            color: var(--gray-text);
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            position: relative;
-            letter-spacing: 1px;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background: var(--accent-color);
-            box-shadow: 0 0 8px var(--accent-color), 0 0 2px var(--coral-accent);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        section {
-            padding: 6rem 2rem 2rem;
-            min-height: 100vh;
-        }
-
-        .hero {
-            background: linear-gradient(120deg, rgba(10,25,41,0.95) 0%, rgba(22,83,126,0.75) 100%), 
-                        url('https://images.unsplash.com/photo-1559827260-dc66d52bef19') center/cover;
-            display: grid;
-            place-items: center;
-            text-align: center;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            color: var(--light-text);
-            text-shadow: 0 2px 16px var(--dark-bg), 0 1px 0 var(--accent-color);
-        }
-
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem 0;
-        }
-
-        .card {
-            background: var(--silver-gradient);
-            border-radius: 15px;
-            padding: 1.5rem;
-            backdrop-filter: blur(5px);
-            transition: transform 0.3s ease;
-            border: 1px solid var(--secondary-color);
-            box-shadow: 0 4px 24px 0 rgba(30,136,229,0.15);
-            color: var(--light-text);
-        }
-        .card * {
-            color: var(--light-text) !important;
-        }
-        
-        .card.collaborator {
-            background: linear-gradient(135deg, var(--sea-green) 0%, var(--accent-color) 100%);
-            border: 2px solid var(--coral-accent);
-            box-shadow: 0 6px 32px 0 rgba(38,166,154,0.3);
-        }
-        
-        .card.collaborator h3 {
-            color: var(--light-text) !important;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-        }
-        
-        .card.collaborator p {
-            color: var(--light-text) !important;
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 0.8rem;
-        }
-        
-        .card.collaborator:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 8px 40px 0 rgba(38,166,154,0.4);
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-        }
-
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: contain;
-            border-radius: 20px;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 20px 0 rgba(15, 52, 96, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border: 2px solid rgba(144, 202, 249, 0.3);
-        }
-
-        .methodology-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .method-card {
-            background: linear-gradient(120deg, var(--primary-color) 0%, var(--accent-color) 100%);
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            color: var(--light-text);
-            font-weight: 500;
-            box-shadow: 0 2px 12px 0 var(--dark-bg);
-        }
-
-        .university-info {
-            background: linear-gradient(90deg, var(--secondary-color) 0%, var(--silver-gradient));
-            padding: 2rem;
-            border-radius: 10px;
-            margin: 2rem 0;
-            color: var(--dark-bg);
-            font-weight: 600;
-            box-shadow: 0 2px 12px 0 var(--dark-bg);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: none; }
-        }
-
-        .animate-in {
-            animation: fadeIn 1s ease-out forwards;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                gap: 1.5rem;
-            }
-            .methodology-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-links">
-            <a href="#inicio"><i class="fas fa-home"></i> Inicio</a>
-            <a href="#creadores"><i class="fas fa-users"></i> Creadores</a>
-            <a href="#metodologia"><i class="fas fa-flask"></i> Metodología</a>
-            <a href="#agradecimientos"><i class="fas fa-hands-helping"></i> Agradecimientos</a>
+        <div class="nav-container">
+            <!-- Menú normal para desktop -->
+            <div class="nav-links">
+                <a href="#inicio"><i class="fas fa-home"></i> Inicio</a>
+                <a href="#creadores"><i class="fas fa-users"></i> Creadores</a>
+                <a href="#metodologia"><i class="fas fa-flask"></i> Metodología</a>
+                <a href="#agradecimientos"><i class="fas fa-hands-helping"></i> Agradecimientos</a>
+            </div>
+            
+            <!-- Botón hamburguesa para móviles -->
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Menú móvil -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#inicio"><i class="fas fa-home"></i> Inicio</a>
+        <a href="#creadores"><i class="fas fa-users"></i> Creadores</a>
+        <a href="#metodologia"><i class="fas fa-flask"></i> Metodología</a>
+        <a href="#agradecimientos"><i class="fas fa-hands-helping"></i> Agradecimientos</a>
+    </div>
 
     <section id="inicio" class="hero">
         <div class="hero-content">
@@ -401,27 +224,6 @@
         </div>
     </section>
 
-    <style>
-        footer {
-            background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
-            color: var(--light-text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            box-shadow: 0 -2px 12px 0 var(--dark-bg);
-        }
-
-        footer p {
-            text-align: center;
-        }
-    </style>
-
-    
-
     <footer>
         <p>
             Este recurso es gratuito y se puede compartir libremente. &copy; 
@@ -433,6 +235,82 @@
 
 
     <script>
+        // Variables globales
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navbar = document.querySelector('.navbar');
+        let lastScrollTop = 0;
+        let isMenuOpen = false;
+
+        // Función para toggle del menú hamburguesa
+        function toggleMobileMenu() {
+            isMenuOpen = !isMenuOpen;
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            
+            // Prevenir scroll del body cuando el menú está abierto
+            if (isMenuOpen) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Event listener para el botón hamburguesa
+        hamburger.addEventListener('click', toggleMobileMenu);
+
+        // Cerrar menú al hacer click en un enlace del menú móvil
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (isMenuOpen) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+
+        // Cerrar menú al hacer click fuera de él
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) {
+                if (isMenuOpen) {
+                    toggleMobileMenu();
+                }
+            }
+        });
+
+        // Función para ocultar/mostrar navbar al hacer scroll
+        function handleNavbarScroll() {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Solo aplicar en dispositivos móviles (768px o menos)
+            if (window.innerWidth <= 768) {
+                if (currentScroll > lastScrollTop && currentScroll > 100) {
+                    // Scrolling hacia abajo - ocultar navbar
+                    navbar.classList.add('hidden');
+                } else {
+                    // Scrolling hacia arriba - mostrar navbar
+                    navbar.classList.remove('hidden');
+                }
+            } else {
+                // En desktop, siempre mostrar navbar
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        }
+
+        // Event listener para scroll
+        window.addEventListener('scroll', handleNavbarScroll);
+
+        // Event listener para resize (para manejar cambios de orientación)
+        window.addEventListener('resize', () => {
+            // Cerrar menú móvil si se cambia a desktop
+            if (window.innerWidth > 768 && isMenuOpen) {
+                toggleMobileMenu();
+            }
+            // Resetear navbar en resize
+            handleNavbarScroll();
+        });
+
         // Animaciones al scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
